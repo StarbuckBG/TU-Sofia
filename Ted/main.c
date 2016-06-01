@@ -49,12 +49,12 @@ int main(int argc, const char * argv[]) {
             current->next = (item_t *) malloc(sizeof(item_t));
             current->next->previous = current;
             current = current->next;
-            printf("%s", lineread);
+//            printf("%s", lineread);
             sscanf(lineread, "%s %f", nameBuff, &priceBuff);
             current->name = (char *) malloc(strlen(nameBuff) + 1);
             strcpy(current->name, nameBuff);
 	    current->price = priceBuff;
-		printf("%s %0.2f\n", current->name, current->price);
+//		printf("%s %0.2f\n", current->name, current->price);
         }
 	printf("Data read\n");
     }
@@ -72,7 +72,7 @@ int main(int argc, const char * argv[]) {
 	fclose(mainFile);
 	while(1)
         {
-		printf("Waiting to read data from file ");
+//		printf("Waiting to read data from file ");
             char currentItem[50];
             char otherProcessId[20];
             memset(otherProcessId, 0, sizeof(otherProcessId));
@@ -81,10 +81,10 @@ int main(int argc, const char * argv[]) {
 		current = firstItem;
             if(sscanf(readbuff, "%s %s",otherProcessId, currentItem))
             {
-		printf("Item to check price: %s\n", currentItem);
+//		printf("Item to check price: %s\n", currentItem);
                 char fifoFileName[30];
                 sprintf(fifoFileName, "/tmp/%s", otherProcessId);
-		printf("File name : %s\n", fifoFileName);
+//		printf("File name : %s\n", fifoFileName);
                 pid_t forkResult = vfork();
                 if(forkResult == 0)
                 {
@@ -92,12 +92,12 @@ int main(int argc, const char * argv[]) {
 		{
                     //unlink(fifoFileName);
                     mknod(fifoFileName, 0600, 0);
-                    printf("Fifo created");
+//                    printf("Fifo created");
                     FILE * fifoFile = fopen(fifoFileName, "w");
-			printf("%s %s\n", current->name, currentItem);
+//			printf("%s %s\n", current->name, currentItem);
                     if(strcmp(current->name, currentItem) == 0)
                     {
-                        printf("Found");
+//                        printf("Found");
                         fprintf(fifoFile,"%f", current->price);
                         fclose(fifoFile);
                         exit(0);
@@ -116,7 +116,6 @@ int main(int argc, const char * argv[]) {
 		else break;
             }
         }
-//	fclose(mainFile);
     }
     return 0;
 }
