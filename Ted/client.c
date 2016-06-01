@@ -3,6 +3,7 @@
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
+#include <sys/stat.h>
 
 #define MAIN_FILE "/tmp/inputFile1.txt"
 
@@ -12,8 +13,6 @@ int main(int argc, const char * argv[]) {
 while(1)
 {
     FILE * mainFile;
-    if(mainFile = fopen(MAIN_FILE, "w"))
-    {
 	printf("Starting\n");
         char dataToSend[30];
         char fileName[6];
@@ -35,6 +34,7 @@ while(1)
                 sprintf(dataToSend, "%d %s\n", getpid(), productCode);
 		fputs(dataToSend, mainFile);
 		fclose(mainFile);
+		printf("Close mainFile\n");
                 usleep(200000);
                 char fileName1[30];
                 memset(fileName1, 0, sizeof(fileName1));
@@ -42,26 +42,28 @@ while(1)
 		printf("%s\n", fileName1);
                	FILE * inputFile = fopen(fileName1, "r");
 		while(inputFile == NULL) inputFile = fopen(fileName1, "r");
-                if(inputFile)
+		if(inputFile)
                 {
                     printf("File opened\n");
                     while(1)
                     {
                         char outputString[200];
                         memset(outputString, 0, sizeof(outputString));
-                        fgets(outputString, sizeof(outputString), inputFile);
-			fclose(inputFile);
+                        if(!fgets(outputString, sizeof(outputString), inputFile))
+			{
+				if(inputFile)fclose(inputFile);
+				 break;
+			}
+
 			float tempSum = 0;
 			printf("String from main %s\n", outputString);
                         sscanf(outputString, "%f", &tempSum);
                         sum+=tempSum;
-                        break;
                     }
                 }
             }
         }
     }
-}
     return 0;
 }
 
