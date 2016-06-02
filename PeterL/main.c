@@ -20,7 +20,7 @@ int main(int argc, char ** argv)
 		memset(currentCommand, 0, sizeof(currentCommand));
 		if(fgets(currentCommand, sizeof(currentCommand), file) != NULL)
 		{
-			currentCommand[strlen(currentCommand)-1] = 0;
+			currentCommand[strlen(currentCommand)-1] = 'a';
 			if(argv[1] == NULL) strcat(commandBuffer, currentCommand);
 		}
 		else
